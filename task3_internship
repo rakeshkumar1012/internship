@@ -1,33 +1,57 @@
-import java.util.Scanner;
-public class PasswordStrengthIndicator {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter a password: ");
-        String password = scanner.nextLine();
-        scanner.close();
-        int length = password.length();
-        boolean hasUppercase = false;
-        boolean hasLowercase = false;
-        boolean hasDigit = false;
-        boolean hasSpecialChar = false;
-        for (char c : password.toCharArray()) {
-            if (Character.isUpperCase(c)) {
-                hasUppercase = true;
-            } else if (Character.isLowerCase(c)) {
-                hasLowercase = true;
-            } else if (Character.isDigit(c)) {
-                hasDigit = true;
-            } else {
-                hasSpecialChar = true;
-            }
-        }
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-        if (length > 8 && hasUppercase && hasLowercase && hasDigit && hasSpecialChar) {
-            System.out.println("Password strength: Strong");
-        } else if ((length > 6 && length <= 8) && (hasUppercase || hasLowercase || hasDigit || hasSpecialChar)) {
-            System.out.println("Password strength: Medium");
+public class PasswordStrengthIndicator extends JFrame {
+    private JTextField passwordField;
+    private JLabel strengthLabel;
+
+    public PasswordStrengthIndicator() {
+        setTitle("Password Strength Indicator");
+        setSize(400, 150);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridLayout(3, 1));
+
+        passwordField = new JTextField();
+        passwordField.setFont(new Font("Arial", Font.PLAIN, 18));
+        passwordField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                checkPasswordStrength(passwordField.getText());
+            }
+        });
+
+        strengthLabel = new JLabel("Strength: ");
+        strengthLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        add(new JLabel("Enter Password: "));
+        add(passwordField);
+        add(strengthLabel);
+    }
+
+    private void checkPasswordStrength(String password) {
+        int length = password.length();
+        boolean hasLowerCase = !password.equals(password.toUpperCase());
+        boolean hasUpperCase = !password.equals(password.toLowerCase());
+        boolean hasDigit = password.matches(".*\\d.*");
+        boolean hasSpecialChar = password.matches(".*[!@#$%^&*()].*");
+
+        if (length >= 8 && hasLowerCase && hasUpperCase && hasDigit && hasSpecialChar) {
+            strengthLabel.setText("Strength: Strong");
+        } else if (length >= 6) {
+            strengthLabel.setText("Strength: Medium");
         } else {
-            System.out.println("Password strength: Weak");
+            strengthLabel.setText("Strength: Weak");
         }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new PasswordStrengthIndicator().setVisible(true);
+            }
+        });
     }
 }
