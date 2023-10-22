@@ -1,0 +1,33 @@
+import java.util.Scanner;
+public class PasswordStrengthIndicator {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a password: ");
+        String password = scanner.nextLine();
+        scanner.close();
+        int length = password.length();
+        boolean hasUppercase = false;
+        boolean hasLowercase = false;
+        boolean hasDigit = false;
+        boolean hasSpecialChar = false;
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                hasUppercase = true;
+            } else if (Character.isLowerCase(c)) {
+                hasLowercase = true;
+            } else if (Character.isDigit(c)) {
+                hasDigit = true;
+            } else {
+                hasSpecialChar = true;
+            }
+        }
+
+        if (length > 8 && hasUppercase && hasLowercase && hasDigit && hasSpecialChar) {
+            System.out.println("Password strength: Strong");
+        } else if ((length > 6 && length <= 8) && (hasUppercase || hasLowercase || hasDigit || hasSpecialChar)) {
+            System.out.println("Password strength: Medium");
+        } else {
+            System.out.println("Password strength: Weak");
+        }
+    }
+}
